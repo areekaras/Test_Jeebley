@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="13533" systemVersion="17B1003" minimumToolsVersion="Xcode 8.0" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="Category" representedClassName=".Category" syncable="YES">
+        <attribute name="mastMId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="menuCatId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="menuName_eng" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="items" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Item" inverseName="category" inverseEntity="Item" syncable="YES"/>
+    </entity>
+    <entity name="Item" representedClassName=".Item" syncable="YES">
+        <attribute name="itemDesc_eng" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="itemFoodType" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="itemId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="itemImage" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="itemMinQty" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="itemName_eng" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="itemPrice" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="logoImage" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="status" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="category" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Category" inverseName="items" inverseEntity="Category" syncable="YES"/>
+    </entity>
+    <entity name="Store" representedClassName=".Store" syncable="YES">
+        <attribute name="branchStatus" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="cntrCurrency" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="openingStatus" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="rDeliveryCharge" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="rDeliveryTime" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="rId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="rImage" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="rMinOrderAmt" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="rName" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="workingHour" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
+    <elements>
+        <element name="Category" positionX="-207" positionY="198" width="128" height="103"/>
+        <element name="Item" positionX="43" positionY="108" width="128" height="193"/>
+        <element name="Store" positionX="-209" positionY="-36" width="128" height="193"/>
+    </elements>
+</model>
