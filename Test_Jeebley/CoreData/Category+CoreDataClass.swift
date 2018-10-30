@@ -10,7 +10,9 @@
 import Foundation
 import CoreData
 
-
+/**
+    Entity to save Category Information
+ */
 public class Category: NSManagedObject {
 
 }

@@ -9,11 +9,14 @@
 import Foundation
 import UIKit
 
+
+/// Struct for RestaurentInfo - json parsing
 public struct RestaurentInfo: Decodable {
     let response_code: Int?
     let restaurantAreaInfo: StoreInfo?
 }
 
+/// Struct for StoreInfo - json parsing
 public struct StoreInfo: Decodable {
     let rId:String?
     let rName:String?
@@ -27,10 +30,12 @@ public struct StoreInfo: Decodable {
     let workingHour:String?
 }
 
+/// Struct for CategoryArray - json parsing
 public struct CategoryArray: Decodable {
     let categoryArray: [CategoryInfo]?
 }
 
+/// Struct for CategoryInfo - json parsing
 public struct CategoryInfo: Decodable{
     let mastMId:String?
     let menuCatId:String?
@@ -38,6 +43,7 @@ public struct CategoryInfo: Decodable{
     let menuArray:[ItemInfo]?
 }
 
+/// Struct for ItemInfo - json parsing
 public struct ItemInfo: Decodable{
     let itemId:String?
     let itemName_eng:String?

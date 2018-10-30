@@ -1,8 +1,14 @@
 PODS:
+  - Hero (1.4.0)
   - SVProgressHUD (2.2.5)
 
 DEPENDENCIES:
+  - Hero
   - SVProgressHUD (from `https://github.com/SVProgressHUD/SVProgressHUD.git`)
+
+SPEC REPOS:
+  https://github.com/cocoapods/specs.git:
+    - Hero
 
 EXTERNAL SOURCES:
   SVProgressHUD:
@@ -14,8 +20,9 @@ CHECKOUT OPTIONS:
     :git: https://github.com/SVProgressHUD/SVProgressHUD.git
 
 SPEC CHECKSUMS:
+  Hero: bac92350d7201a1a940003e0767c7b52ce7c99a1
   SVProgressHUD: 1428aafac632c1f86f62aa4243ec12008d7a51d6
 
-PODFILE CHECKSUM: 69e752cc28403f3e6e21419427ea6f6cc19422e6
+PODFILE CHECKSUM: e3c607d219e47c39609969f4fa6053dc198d2035
 
 COCOAPODS: 1.5.3

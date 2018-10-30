@@ -9,6 +9,8 @@
 import UIKit
 import CoreData
 
+
+/// An NSObject Class to Handle CoreData for developer
 open class CoreDataHelper: NSObject {
     
     open static var  managedObjectContext: NSManagedObjectContext? = CoreDataStack.sharedInstance.managedObjectContext
@@ -17,8 +19,8 @@ open class CoreDataHelper: NSObject {
         return managedObject
     }
     
-   // open class func saveManagedObjectContext()->(status : Bool, message: String?){
-
+    
+    /// Function To Save managedObjectContext
     open class func saveManagedObjectContext(){
         var error: NSError?
         do {
@@ -31,7 +33,9 @@ open class CoreDataHelper: NSObject {
     }
     
     
-    // open class func deleteManagedObjectContext(_ object :NSManagedObject)-> (status:Bool,message:String?)
+    /// Function to delete Managed Object Context
+    ///
+    /// - Parameter object: object to Delete
     open class func deleteManagedObjectContext(_ object :NSManagedObject) {
        managedObjectContext?.delete(object)
         var error: NSError?
@@ -43,10 +47,29 @@ open class CoreDataHelper: NSObject {
         }
     }
     
+    
+   /// Function to get fetchedResultController for required predicates and sort descriptor
+   ///
+   /// - Parameters:
+   ///   - entityName: The name of the entity to fetch
+   ///   - sortDescriptors: Sorting Conditions
+   ///   - predicate: Predicates array
+   ///   - section: section
+   /// - Returns: return fetchResultController with entity array
    open class func getFetchedResultControllerFromEntity(_ entityName:String , sortDescriptors:NSArray? ,predicate:[NSPredicate] ,section:String!)->NSFetchedResultsController<NSFetchRequestResult> {
         return CoreDataHelper.fetchResultController(entityName as NSString, batchSize: 20, sortDescriptor: sortDescriptors,predicate: predicate , section:section)
     }
 
+    
+    /// Function to entities array from DB
+    ///
+    /// - Parameters:
+    ///   - entityName: name of entity
+    ///   - predicate: predicates array
+    ///   - sortkey: sort condition`
+    ///   - order: ascending or descending
+    ///   - limit: set limit to fetch
+    /// - Returns: returns entity array
     open class func fetchEntities(_ entityName:NSString, withPredicate predicate:[NSPredicate],sortkey:String!,order:Bool!, limit:Int!)->NSArray{
         let fetchRequest:NSFetchRequest = NSFetchRequest<NSFetchRequestResult>()
         let entetyDescription:NSEntityDescription = NSEntityDescription.entity(forEntityName: entityName as String, in: managedObjectContext!)!
@@ -72,6 +95,13 @@ open class CoreDataHelper: NSObject {
         return items
     }
     
+    
+   /// Function to entities array from DB
+   ///
+   /// - Parameters:
+   ///   - entityName: name of entity
+   ///   - sortDescriptor: Sorting Conditions
+   /// - Returns: returns entity array
    open  class func fetchEntities(_ entityName:NSString, withSortDescriptors sortDescriptor:NSArray?)->NSArray {
     
     let fetchRequest  = NSFetchRequest<NSFetchRequestResult>()
@@ -90,6 +120,15 @@ open class CoreDataHelper: NSObject {
     }
     
     
+    /// Function to get fetchedResultController for required predicates and sort descriptor with batch size
+    ///
+    /// - Parameters:
+    ///   - entityName: name of entity
+    ///   - batchSize: batch size of entity
+    ///   - sortDescriptor: Sorting Conditions
+    ///   - predicate: predicates array
+    ///   - section: section
+    /// - Returns: return fetchResultController with entity array
     open class func fetchResultController(_ entityName:NSString,batchSize:Int8,sortDescriptor:NSArray?,predicate:[NSPredicate],section:String!) -> NSFetchedResultsController<NSFetchRequestResult> {
         var _fetchedResultsController:NSFetchedResultsController<NSFetchRequestResult>?
         if _fetchedResultsController != nil {
@@ -115,19 +154,20 @@ open class CoreDataHelper: NSObject {
             sectionNameKeyPath: section,
             cacheName: nil)
         _fetchedResultsController = frc
-        
-       // var error: NSError? = nil
         do {
             try _fetchedResultsController!.performFetch()
         } catch _ as NSError {
-           // error = error1
             print("fetchResultController Error!")
             abort()
         }
         return _fetchedResultsController!
     }
-    // remove persistent storage file - sql
-   open class func clearDataStore(_ storeCordinator:NSPersistentStoreCoordinator?) {
+
+    
+    /// Function to reset data store
+    ///
+    /// - Parameter storeCordinator: store cordinator
+    open class func clearDataStore(_ storeCordinator:NSPersistentStoreCoordinator?) {
        let storeCordinator:NSPersistentStoreCoordinator = storeCordinator!
         let store:NSPersistentStore = storeCordinator.persistentStores[0] 
         let storeUrl:URL = store.url!
@@ -140,18 +180,24 @@ open class CoreDataHelper: NSObject {
             try FileManager.default.removeItem(atPath: storeUrl.path)
         } catch _ {
         } 
-        
     }
     
+    
+    /// Clear All Entities
     open class func clearStore() {
         let predicates = [NSPredicate]()
-        deleteEntityFromDB(entityName: ["Category",
-                                        "Store",
-                                        "Item"], predicates: predicates)
-        
+        deleteEntityFromDB(entityName: [Entities.STORE.rawValue,
+                                        Entities.CATEGORY.rawValue,
+                                        Entities.ITEM.rawValue], predicates: predicates)
         saveManagedObjectContext()
     }
     
+    
+    /// Delete function to delete an with predicates specification
+    ///
+    /// - Parameters:
+    ///   - entityName: entity to delete
+    ///   - predicates: redicates specification
     open class func deleteEntityFromDB(entityName:[String],predicates:[NSPredicate]) {
         for name in entityName {
             let result = fetchEntities(name as NSString, withPredicate: predicates , sortkey: nil , order : nil , limit : nil)
@@ -163,6 +209,5 @@ open class CoreDataHelper: NSObject {
             }
         }
     }
-    
     
 }

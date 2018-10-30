@@ -10,7 +10,9 @@
 import Foundation
 import CoreData
 
-
+/**
+  Entity to save Store Information
+*/
 public class Store: NSManagedObject {
 
 }

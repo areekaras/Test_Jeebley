@@ -10,7 +10,9 @@
 import Foundation
 import CoreData
 
-
+/**
+ Entity to save Item Information
+ */
 public class Item: NSManagedObject {
 
 }

@@ -10,10 +10,11 @@ import UIKit
 import CoreData
 
 
+/// Set up Core Data Function
 open class CoreDataStack: NSObject{
     
-    // MARK: - Core Data stack
-    // Create a shared instance of AppManager
+    
+    /// create shared instance for this class
     public final  class var sharedInstance : CoreDataStack {
         struct Static {
             static var instance : CoreDataStack?
@@ -25,17 +26,23 @@ open class CoreDataStack: NSObject{
         return Static.instance!
     }
 
+    
+    /// Initialising document directory
     lazy var applicationDocumentsDirectory: URL = {
         let urls = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
         return urls[urls.count-1]
     }()
     
+    
+    /// core data managedObjectModel
     lazy var managedObjectModel: NSManagedObjectModel = {
         let newPath = Bundle(for: type(of: self))
         let modelURL = newPath.url(forResource: "Test_Jeebley", withExtension: "momd")!
         return NSManagedObjectModel(contentsOf: modelURL)!
     }()
     
+    
+    /// core data persistentStoreCoordinator
     lazy var persistentStoreCoordinator: NSPersistentStoreCoordinator? = {
         var coordinator: NSPersistentStoreCoordinator? = NSPersistentStoreCoordinator(managedObjectModel: self.managedObjectModel)
         let url = self.applicationDocumentsDirectory.appendingPathComponent("Test_Jeebley.sqlite")
@@ -63,6 +70,8 @@ open class CoreDataStack: NSObject{
         return coordinator
     }()
     
+    
+    /// core data managedObjectContext
     lazy var managedObjectContext: NSManagedObjectContext? = {
         let coordinator = self.persistentStoreCoordinator
         if coordinator == nil {
@@ -73,7 +82,8 @@ open class CoreDataStack: NSObject{
         return managedObjectContext
     }()
     
-    // MARK: - Core Data Saving support
+    
+    /// core data saving managedObjectContext
     func saveContext () {
         print("savecontext")
         if let moc = managedObjectContext {

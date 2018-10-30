@@ -8,14 +8,22 @@
 
 import UIKit
 import SVProgressHUD
+import Hero
 
+
+/// Structure for handle collapse and expand table view cell, items Array
 struct ExpandableItems {
     var isExpanded : Bool
     let items : [Item]
 }
 
-class StoreViewController: UIViewController,UIScrollViewDelegate {
+/// StoreViewController Handle the following
+///   * Category Items API  call
+///   * downlad items images - sdweb image
+///   * go to corresponding itemVC on item selection
+class StoreViewController: BaseViewController {
     
+    //MARK: - IBOutlets
     @IBOutlet weak var navigationTitleView: UIView!
     @IBOutlet weak var navigationTitleLabel: UILabel!
     @IBOutlet weak var navigationVwTopConstraint: NSLayoutConstraint!
@@ -30,40 +38,38 @@ class StoreViewController: UIViewController,UIScrollViewDelegate {
     @IBOutlet weak var averageLabel: UILabel!
     @IBOutlet weak var deliveryFeeLabel: UILabel!
     
+    //MARK: - IBActions
     @IBAction func infoButtonTapped(_ sender: Any) {
         self.infoButton.isHidden = true
-        self.setView(view: infoStackView, hidden: false)
+        UIView.animate(withDuration: 0.8, animations: {
+            self.infoStackView.alpha = 1.0
+        })
+//        self.setView(view: infoStackView, hidden: false)
     }
     
-    var Headerview : UIView!
-    var NewHeaderLayer : CAShapeLayer!
-    
-    private let Headerheight : CGFloat = 225
-    private let Headercut : CGFloat = 0
-    
-    let currencyString = "KD"
-    
+    //MARK: - VC Variables
     var menuArray = [Category]()
-    var storeInfo = Store()
-    var itemsCountForMenu: [Category: Int] = [:]
-    var itemsForMenu: [Category: [Item]] = [:]
-    
-    //    var itemsArray: [[Item]] = []
+    var storeInfo : Store?
     var itemsArray: [ExpandableItems] = []
+    
+    var selectedIndexPath = IndexPath()
+    var selectedItemImage = UIImage()
+    
+    var storeImage : UIImage?
 }
 
 //MARK: - Life cycles
 extension StoreViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.UpdateView()
+        self.UpdateView(tableView: storeTableView)
         
-        self.navigationVwTopConstraint.constant = -60
-        
+        self.navigationVwTopConstraint.constant = -70
+        self.infoStackView.alpha = 0
         
         self.startLoader()
-        fetchfromDB_store()
         self.initialiseValues()
+        
         getItemsInfo_API()
     }
     
@@ -71,23 +77,31 @@ extension StoreViewController {
         self.storeTableView.decelerationRate = UIScrollViewDecelerationRateFast
     }
     
+     /// Delegate to handle navigation view hide and show for table view scrolling
+     ///
+     /// - Parameter scrollView: scroll view
      func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        self.Setupnewview()
-        print("tableVw content offset : \(storeTableView.contentOffset)")
+        DispatchQueue.main.async {
+            self.Setupnewview(tableView: self.storeTableView)
+        }
+//        print("tableVw content offset : \(storeTableView.contentOffset)")
         if storeTableView.contentOffset.y >= -5 {
-            UIView.animate(withDuration: 0.5, animations: {
+            UIView.animate(withDuration: 0.3, animations: {
                 self.navigationVwTopConstraint.constant = 0
+                self.view.layoutIfNeeded()
             })
         }
         else {
-            UIView.animate(withDuration: 0.5, animations: {
-                self.navigationVwTopConstraint.constant = -60
+            UIView.animate(withDuration: 0.3, animations: {
+                self.navigationVwTopConstraint.constant = -70
+                self.view.layoutIfNeeded()
             })
         }
+        
     }
 }
 
-//MARK: - Functionalities
+//MARK: - Table View Functionalities
 extension StoreViewController:UITableViewDelegate,UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
@@ -99,49 +113,44 @@ extension StoreViewController:UITableViewDelegate,UITableViewDataSource {
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        return menuArray.count + 1
+        return menuArray.count + 1 // count = Number of Menu + 1 Menu title cell
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
         if section == 0 {
-            return 1
+            return 1 //Menu Title cell
         }
         else {
             let expandableItem = itemsArray[section - 1]
             if expandableItem.isExpanded {
                 let item = expandableItem.items
-                return item.count + 1
+                return item.count + 1 // 1 Menu name cell + item count for menu
             }
             else {
-                return 1
+                return 1 // Menu Name cell
             }
         }
     }
+    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if indexPath.section == 0 {
-            let cell = tableView.dequeueReusableCell(withIdentifier: "MenuTitle_TV_Cell", for: indexPath) as! MenuTitle_TV_Cell
-            guard let workingHr = storeInfo.workingHour  else { return cell }
+            // Menu Title Cell
+            
+            let cell = tableView.dequeueReusableCell(withIdentifier: TableViewCell_Ids.MENU_TITLE_CELL.rawValue, for: indexPath) as! MenuTitle_TV_Cell
+            guard let workingHr = storeInfo?.workingHour  else { return cell }
             cell.workingHourLabel.text = workingHr
             return cell
         }
         else  {
             let menuObj = menuArray[(indexPath.section) - 1]
             if indexPath.row == 0 {
-                let cell = tableView.dequeueReusableCell(withIdentifier: "MenuNameTitle_TV_Cell", for: indexPath) as! MenuNameTitle_TV_Cell
-                cell.menuNameLabel.text = menuObj.menuName_eng
-                cell.isCollapsedIndicatorVw.isHidden = true
-                cell.seperatorView.isHidden = false
-                return cell
+                //Menu Name cell
+                return setMenuNameTitleCell(tableView, indexPath, menuObj)
             }
             else {
-                let cell = tableView.dequeueReusableCell(withIdentifier: "ItemDetail_TV_Cell", for: indexPath) as! ItemDetail_TV_Cell
-                let item = itemsArray[(indexPath.section) - 1].items
-                let itemObj = item[indexPath.row - 1]
-                cell.itemNameLabel.text = itemObj.itemName_eng
-                cell.itemDescription.text = itemObj.itemDesc_eng
-                cell.itemPriceLabel.text = itemObj.itemPrice! + " " + currencyString
-                return cell
+                //Items Detail cell
+                return setItemDetailsCell(tableView, indexPath)
             }
         }
     }
@@ -149,9 +158,55 @@ extension StoreViewController:UITableViewDelegate,UITableViewDataSource {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if indexPath.section != 0 {
             if indexPath.row == 0 {
+                //Tapping menu name cell
                 self.handleCollapseExpand(indexPath: indexPath)
             }
+            else {
+                //Tapping item cell
+                selectedIndexPath = indexPath
+                let cell = tableView.cellForRow(at: indexPath) as! ItemDetail_TV_Cell
+                selectedItemImage = cell.itemImageView.image!
+                self.showItemVC ()
+            }
         }
+    }
+    
+    /// set Menu Name title cell for tableview
+    ///
+    /// - Parameters:
+    ///   - tableView: table view name
+    ///   - indexPath: indexPath of cell
+    ///   - menuObj: Category
+    /// - Returns: MenuNameTitle_TV_Cell
+    fileprivate func setMenuNameTitleCell(_ tableView: UITableView, _ indexPath: IndexPath, _ menuObj: Category) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: TableViewCell_Ids.MENU_TITLE_NAME_CELL.rawValue, for: indexPath) as! MenuNameTitle_TV_Cell
+        cell.menuNameLabel.text = menuObj.menuName_eng
+        cell.isCollapsedIndicatorVw.isHidden = true
+        cell.seperatorView.isHidden = false
+        return cell
+    }
+    
+    
+    /// set Item Detail cell for tableview
+    ///
+    /// - Parameters:
+    ///   - tableView: tableview name
+    ///   - indexPath: indexpath of cell
+    /// - Returns: ItemDetail_TV_Cell
+    fileprivate func setItemDetailsCell(_ tableView: UITableView, _ indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: TableViewCell_Ids.ITEM_DETAIL_CELL.rawValue, for: indexPath) as! ItemDetail_TV_Cell
+        let item = itemsArray[(indexPath.section) - 1].items
+        let itemObj = item[indexPath.row - 1]
+        cell.itemNameLabel.text = itemObj.itemName_eng
+        cell.itemDescription.text = itemObj.itemDesc_eng
+        cell.itemPriceLabel.text = itemObj.itemPrice! + " " + self.currencyString
+        
+        cell.itemImageView.loadImageFromUrl(urlString: itemObj.itemImage!)
+        
+        cell.itemImageView.hero.id = "\(indexPath)_image"
+        cell.itemNameLabel.hero.id = "\(indexPath)_label"
+        cell.itemDescription.hero.id = "\(indexPath)_description"
+        return cell
     }
     
     
@@ -159,88 +214,23 @@ extension StoreViewController:UITableViewDelegate,UITableViewDataSource {
 
 //MARK: - Functionalities
 extension StoreViewController {
-    func UpdateView() {
-        storeTableView.backgroundColor = UIColor.white
-        Headerview = storeTableView.tableHeaderView
-        storeTableView.tableHeaderView = nil
-        storeTableView.rowHeight = UITableViewAutomaticDimension
-        storeTableView.estimatedSectionHeaderHeight = 0
-        storeTableView.addSubview(Headerview)
-        
-        NewHeaderLayer = CAShapeLayer()
-        NewHeaderLayer.fillColor = UIColor.black.cgColor
-        Headerview.layer.mask = NewHeaderLayer
-        
-        let newheight = Headerheight - Headercut / 2
-        storeTableView.contentInset = UIEdgeInsets(top: newheight, left: 0, bottom: 0, right: 0)
-        storeTableView.contentOffset = CGPoint(x: 0, y: -newheight)
-        
-        self.Setupnewview()
-    }
     
-    func Setupnewview() {
-        let newheight = Headerheight - Headercut / 2
-        var getheaderframe = CGRect(x: 0, y: -newheight, width: storeTableView.bounds.width, height: Headerheight)
-        if storeTableView.contentOffset.y < newheight
-        {
-            getheaderframe.origin.y = storeTableView.contentOffset.y
-            getheaderframe.size.height = -storeTableView.contentOffset.y + Headercut / 2
-        }
-        
-        Headerview.frame = getheaderframe
-        let cutdirection = UIBezierPath()
-        cutdirection.move(to: CGPoint(x: 0, y: 0))
-        cutdirection.addLine(to: CGPoint(x: getheaderframe.width, y: 0))
-        cutdirection.addLine(to: CGPoint(x: getheaderframe.width, y: getheaderframe.height))
-        cutdirection.addLine(to: CGPoint(x: 0, y: getheaderframe.height - Headercut))
-        NewHeaderLayer.path = cutdirection.cgPath
-    }
     
+    /// API call to get items info
     func getItemsInfo_API() {
         let storeInfoURL = "https://www.jeebleybeta.com/services_new/services.php?action=menuCategories&rId=366&cuisineType=1&countryId=21&langId=1"
-        
-        guard let url = URL(string: storeInfoURL) else { return }
-        
-        URLSession.shared.dataTask(with: url) {
-            (data, response, err) in
-            
-            guard let data = data else { return }
-            
-            do {
-                print(data)
-                let categoryInfo = try JSONDecoder().decode(CategoryArray.self, from: data)
-                
-                guard let _categoryInfo = categoryInfo.categoryArray else { return }
-                
-                self.saveToDB(categoryInfoObj: _categoryInfo)
-                self.reloadTableView()
-                self.endLoader()
-                
-            }
-            catch let jsonErr {
-                print("jsonErr :: \(jsonErr)")
-            }
-            }.resume()
-        
+        apiCall(url: storeInfoURL)
     }
     
-    func saveToDB(categoryInfoObj: [CategoryInfo]) {
-        var i = 0
-        for _category in categoryInfoObj {
-            print("category \(i+1)")
-            let newCategory : Category = CoreDataHelper.insertManagedObject("Category") as! Category
-            newCategory.insertIntoDB(categoryData: _category)
-            CoreDataHelper.saveManagedObjectContext()
-            i += 1
-        }
-    }
     
+    /// loader for API call : start
     func startLoader () {
         self.view.isUserInteractionEnabled = false
         SVProgressHUD.setBackgroundColor(.white)
         SVProgressHUD.show()
     }
     
+    /// loader for API call : end
     func endLoader() {
         DispatchQueue.main.async {
             self.view.isUserInteractionEnabled = true
@@ -248,82 +238,141 @@ extension StoreViewController {
         }
     }
     
+    
+    /// function to reload storeVC table with updated API values
     func reloadTableView() {
-        fetchfromDB()
-        intialiseItemsForMenu()
+        fetchfromDB_category()
         DispatchQueue.main.async {
             self.storeTableView.reloadData()
         }
     }
     
-    func fetchfromDB_store() {
-        let storeList = CoreDataHelper.fetchEntities("Store", withPredicate: [] ,sortkey: nil ,order:nil , limit : nil) as! [Store]
-        storeInfo = storeList[0]
-    }
     
-    func fetchfromDB() {
+    /// DB fetching Category information
+    func fetchfromDB_category() {
         menuArray.removeAll()
         itemsArray.removeAll()
-        let categoryList = CoreDataHelper.fetchEntities("Category", withPredicate: [] ,sortkey: nil ,order:nil , limit : nil) as! [Category]
-        //        menuArray = categoryList
+        let categoryList = DBEntityHelpers().fetchCategoryEntity()
         for menu in categoryList {
             menuArray.append(menu)
             if let items = menu.items?.allObjects as? [Item] {
-                //                itemsArray.append(items)
                 let expandableItem = ExpandableItems(isExpanded: false, items: items)
                 itemsArray.append(expandableItem)
             }
         }
     }
     
-    func intialiseItemsForMenu() {
-        itemsForMenu.removeAll()
-        itemsCountForMenu.removeAll()
-        for menu in menuArray {
-            if let items = menu.items?.allObjects as? [Item] {
-                let itemCount = items.count
-                itemsCountForMenu.updateValue(itemCount, forKey: menu)
-                itemsForMenu.updateValue(items, forKey: menu)
-            }
-        }
-    }
     
+    /// Handling collapse expand on Menu selection
+    ///
+    /// - Parameter indexPath: indexpath of menu
     func handleCollapseExpand(indexPath:IndexPath) {
         var indexPaths = [IndexPath]()
         
-        //        for row in itemsArray[indexPath.section - 1].items.indices {
-        //            let indexP = IndexPath(row: row, section: indexPath.section)
-        //            indexPaths.append(indexP)
-        //        }
         let itemsCount = itemsArray[indexPath.section - 1].items.count + 1
         for row in 1 ..< itemsCount {
             let indexP = IndexPath(row: row, section: indexPath.section)
             indexPaths.append(indexP)
         }
         
-        
         let isExpanded = itemsArray[indexPath.section - 1].isExpanded
         itemsArray[indexPath.section - 1].isExpanded = !isExpanded
         
+        let _indexPath = IndexPath(row: 0, section: indexPath.section)
+        let cell:MenuNameTitle_TV_Cell = storeTableView.cellForRow(at: _indexPath) as! MenuNameTitle_TV_Cell
         if !isExpanded {
+            cell.isCollapsedIndicatorVw.isHidden = false
+            cell.seperatorView.isHidden = true
             storeTableView.insertRows(at: indexPaths, with: .fade)
         }
         else {
+            cell.isCollapsedIndicatorVw.isHidden = true
+            cell.seperatorView.isHidden = false
             storeTableView.deleteRows(at: indexPaths, with: .fade)
         }
     }
     
-    func setView(view: UIView, hidden: Bool) {
-        UIView.transition(with: view, duration: 1, options: .curveEaseOut, animations: {
-            view.isHidden = hidden
-        })
+    
+    
+    /// Initialise VC Values
+    func initialiseValues() {
+//        let storeList = DBEntityHelpers().fetchStoreEntity()
+//        self.storeInfo = storeList[0]
+        
+        self.currencyString = (storeInfo?.cntrCurrency!)!
+        if let storeimage = self.storeImage {
+            self.storeImageView.image = storeimage
+        }
+        self.navigationTitleLabel.text = storeInfo?.rName
+        self.storeNameLabel.text = storeInfo?.rName
+        self.minOrdAmountLable.text = (storeInfo?.rMinOrderAmt!)! + " " + currencyString
+        self.averageLabel.text = storeInfo?.rDeliveryTime!
+        self.deliveryFeeLabel.text = (storeInfo?.rDeliveryCharge!)! + " " +  currencyString
     }
     
-    func initialiseValues() {
-        self.navigationTitleLabel.text = storeInfo.rName
-        self.storeNameLabel.text = storeInfo.rName
-        self.minOrdAmountLable.text = storeInfo.rMinOrderAmt! + " " + currencyString
-        self.averageLabel.text = storeInfo.rDeliveryTime!
-        self.deliveryFeeLabel.text = storeInfo.rDeliveryCharge! + " " +  currencyString
+    
+    /// Perform Segue to itemVC
+    func showItemVC() {
+        DispatchQueue.main.async {
+            self.performSegue(withIdentifier: SegueIds.STORE_ITEM.rawValue, sender: self)
+        }
+    }
+    
+    
+    /// Action after API call
+    ///
+    /// - Parameter data: data recieved from API call
+    func apiResponseActions (data:Data?) {
+        guard let data = data else { return }
+
+        do {
+            print(data)
+            let categoryInfo = try JSONDecoder().decode(CategoryArray.self, from: data)
+
+            guard let _categoryInfo = categoryInfo.categoryArray else { return }
+
+            DBEntityHelpers().saveToDB(categoryInfoObj: _categoryInfo)
+            self.reloadTableView()
+            self.endLoader()
+
+        }
+        catch let jsonErr {
+            print("jsonErr :: \(jsonErr)")
+        }
+    }
+    
+    
+    /// Common Api Call Function
+    ///
+    /// - Parameter url: URL for API call
+    func apiCall (url : String) {
+        let service = Service()
+        service.setConfigUrl(url)
+        service.execute{ (data, action, serviceStatus) in
+            if serviceStatus == ServiceStatus.FAILED.rawValue {
+                self.showAlert(title: "", message: action)
+            }
+            else {
+                self.apiResponseActions(data: data)
+            }
+        }
+    }
+    
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == SegueIds.STORE_ITEM.rawValue {
+            let itemVC = segue.destination as! ItemViewController
+            let item = itemsArray[(selectedIndexPath.section) - 1].items
+            let itemObj = item[selectedIndexPath.row - 1]
+            
+            //passing values to itemVC
+            itemVC.item = itemObj
+            itemVC.itemImage = selectedItemImage
+            itemVC.heroId_image = "\(selectedIndexPath)_image"
+            itemVC.heroId_label = "\(selectedIndexPath)_label"
+            itemVC.heroId_description = "\(selectedIndexPath)_description"
+        }
     }
 }
+
+

@@ -9,6 +9,10 @@
 import Foundation
 
 extension Store {
+    
+    /// Insert data into Store Entity object
+    ///
+    /// - Parameter storeData: data to insert
     func insertIntoDB(storeData:StoreInfo) {
         branchStatus = storeData.branchStatus
         cntrCurrency = storeData.cntrCurrency
@@ -24,6 +28,9 @@ extension Store {
 }
 
 extension Category {
+    /// Insert data into Category Entity object
+    ///
+    /// - Parameter categoryData: data to insert
     func insertIntoDB(categoryData:CategoryInfo) {
         mastMId = categoryData.mastMId
         menuCatId = categoryData.menuCatId
@@ -41,6 +48,9 @@ extension Category {
 }
 
 extension Item {
+    /// Insert data into Item Entity object
+    ///
+    /// - Parameter itemData: data to insert
     func insertIntoDB(itemData:ItemInfo,category: Category) {
         itemDesc_eng = itemData.itemDesc_eng
         itemFoodType = itemData.itemFoodType
