@@ -11,7 +11,7 @@ import Foundation
 private var _url : String = ""
 private var _statusCode : Int = 0
 private var _httpStatusCode:Int?
-private var _timeOutInterval: Int = 10
+private var _timeOutInterval: Int = 20
 private var _allowCelllarAccess:Bool = true
 var _requestMethod:String = RequestMethod.GET.rawValue
 
@@ -96,7 +96,7 @@ open class Service :NSObject  {
 		let configuration = URLSessionConfiguration.default
 		configuration.allowsCellularAccess = _allowCelllarAccess
 		configuration.timeoutIntervalForRequest = TimeInterval(_timeOutInterval)
-		configuration.timeoutIntervalForResource = 10
+		configuration.timeoutIntervalForResource = 20
 		return configuration
 	}
 	
