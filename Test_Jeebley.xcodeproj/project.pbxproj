@@ -29,7 +29,6 @@
 		604710222188345D00AE0BE4 /* DBEntityHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 604710212188345D00AE0BE4 /* DBEntityHelpers.swift */; };
 		604710242188516800AE0BE4 /* AppReferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 604710232188516800AE0BE4 /* AppReferences.swift */; };
 		60471026218899D600AE0BE4 /* AppExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60471025218899D600AE0BE4 /* AppExtensions.swift */; };
-		604710282188BA0D00AE0BE4 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 604710272188BA0C00AE0BE4 /* README.md */; };
 		6072327C218398D3000147FC /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6072327B218398D3000147FC /* AppDelegate.swift */; };
 		607232862183990C000147FC /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 607232852183990C000147FC /* Assets.xcassets */; };
 		6072328D21846D3C000147FC /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6072328921846D3C000147FC /* LaunchScreen.storyboard */; };
@@ -94,7 +93,6 @@
 		604710212188345D00AE0BE4 /* DBEntityHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBEntityHelpers.swift; sourceTree = "<group>"; };
 		604710232188516800AE0BE4 /* AppReferences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppReferences.swift; sourceTree = "<group>"; };
 		60471025218899D600AE0BE4 /* AppExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppExtensions.swift; sourceTree = "<group>"; };
-		604710272188BA0C00AE0BE4 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		6072327B218398D3000147FC /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		607232852183990C000147FC /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		6072328A21846D3C000147FC /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -173,7 +171,6 @@
 		6040B834218386C00064BBCA /* Test_Jeebley */ = {
 			isa = PBXGroup;
 			children = (
-				604710272188BA0C00AE0BE4 /* README.md */,
 				60723277218390DB000147FC /* AppDelegate */,
 				6072329321846F39000147FC /* CoreData */,
 				6072327A21839133000147FC /* Models */,
@@ -447,7 +444,6 @@
 			files = (
 				6072328E21846D3C000147FC /* Main.storyboard in Resources */,
 				607232862183990C000147FC /* Assets.xcassets in Resources */,
-				604710282188BA0D00AE0BE4 /* README.md in Resources */,
 				6072328D21846D3C000147FC /* LaunchScreen.storyboard in Resources */,
 				604710142187693700AE0BE4 /* countCustomView.xib in Resources */,
 			);
