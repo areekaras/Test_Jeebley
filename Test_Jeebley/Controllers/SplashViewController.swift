@@ -33,6 +33,7 @@ extension SplashViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        // Animation of Logo and loader
         animateCompanyLogo()
         // API call to get store Info
         getStoreInfo_API()
