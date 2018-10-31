@@ -12,7 +12,7 @@ import SystemConfiguration
 /// BaseViewController Handle the following
 ///   * Carries Common Functionalities of views
 ///   * status bar style and background
-class BaseViewController: UIViewController,UIScrollViewDelegate {
+class BaseViewController: UIViewController,UIScrollViewDelegate,AlertViewDelegate {
 
     //MARK: - VC Variables
     // header view
@@ -22,6 +22,9 @@ class BaseViewController: UIViewController,UIScrollViewDelegate {
     private let Headercut : CGFloat = 0
     
     var currencyString = "KD"
+    
+    var currentVC = ""
+    internal  var alertDelegate : AlertViewDelegate?
 
 }
 
@@ -109,7 +112,9 @@ extension BaseViewController {
     ///   - message: message to share on alert
     func showAlert(title: String, message : String) {
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        let action = UIAlertAction(title: "OK", style: .default, handler: nil)
+        let action = UIAlertAction(title: "OK", style: .default) { (action) -> Void in
+            self.alertDelegate?.alertViewDismissed!()
+        }
         alert.addAction(action)
         present(alert, animated: true, completion: nil)
     }
@@ -155,6 +160,10 @@ extension BaseViewController {
             view.isHidden = hidden
         })
     }
-
     
+}
+
+/// delegate action for UIAlertActions
+@objc protocol AlertViewDelegate {
+    @objc optional func alertViewDismissed()
 }

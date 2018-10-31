@@ -70,6 +70,9 @@ extension StoreViewController {
         self.startLoader()
         self.initialiseValues()
         
+        self.alertDelegate = self
+        self.currentVC = ViewControllers.STORE_VC.rawValue
+        
         getItemsInfo_API()
     }
     
@@ -209,7 +212,15 @@ extension StoreViewController:UITableViewDelegate,UITableViewDataSource {
         return cell
     }
     
-    
+}
+
+//MARK: - DelegateFunctions
+extension StoreViewController {
+    func alertViewDismissed() {
+        if currentVC == ViewControllers.STORE_VC.rawValue {
+            getItemsInfo_API()
+        }
+    }
 }
 
 //MARK: - Functionalities
