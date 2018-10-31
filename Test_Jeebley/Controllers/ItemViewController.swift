@@ -36,7 +36,7 @@ class ItemViewController: BaseViewController {
     
     //MARK: - VC Variables
     var itemImage = UIImage()
-    var item = Item()
+    var item: Item!
     
     //hero ids to animation presentation of VC's
     var heroId_image = ""
@@ -68,17 +68,20 @@ extension ItemViewController {
         }
 //        print("tableVw content offset : \(itemTableView.contentOffset)")
         if itemTableView.contentOffset.y >= -5 {
+            self.isDefaultStatusBarStyle = true
             UIView.animate(withDuration: 0.5, animations: {
                 self.navigationVwTopConstraint.constant = 0
                 self.view.layoutIfNeeded()
             })
         }
         else {
+            self.isDefaultStatusBarStyle = false
             UIView.animate(withDuration: 0.5, animations: {
                 self.navigationVwTopConstraint.constant = -70
                 self.view.layoutIfNeeded()
             })
         }
+        self.setNeedsStatusBarAppearanceUpdate()
     }
 }
 

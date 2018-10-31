@@ -25,6 +25,8 @@ class BaseViewController: UIViewController,UIScrollViewDelegate,AlertViewDelegat
     
     var currentVC = ""
     internal  var alertDelegate : AlertViewDelegate?
+    
+    var isDefaultStatusBarStyle = false
 
 }
 
@@ -41,7 +43,12 @@ extension BaseViewController {
     }
     
     override var preferredStatusBarStyle : UIStatusBarStyle {
-        return .lightContent
+        if isDefaultStatusBarStyle {
+            return .default
+        }
+        else {
+            return .lightContent
+        }
     }
 }
 
