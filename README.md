@@ -1,5 +1,5 @@
 # Test_Jeebley
-* Interview Task - iOS Developer assigned by Jeebley, Kuwait
+* Experiment RESTful API, JSON, CoreData, Stretchy header, Image Downloading and Caching
 * Developer : Shibili Areekara
 
 
@@ -7,4 +7,8 @@
 * Hero - for smooth transition between view controllers
 * SVProgressHUD - loader in application
 
-** Image urls in the api are not directing to proper link, Given place holder images instead, If Proper Url , Will show the  exact Image
+#### Font used - Helvetica Neue
+
+- Image urls in the api are not directing to proper link, Given place holder images instead, If Proper Url , Will show the  exact Image
+- Given a 15 second request time out interval for API calls
+- Font, font size, colour codes are not exact as Jeebley application
