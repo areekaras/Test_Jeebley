@@ -3,9 +3,8 @@
 * Developer : Shibili Areekara
 
 
-
 ### Framework Libraries Used
 * Hero - for smooth transition between view controllers
 * SVProgressHUD - loader in application
 
-** Image urls in the api are not directing to proper link, Given a place holder image instead.
+** Image urls in the api are not directing to proper link, Given place holder images instead, If Proper Url , Will show the  exact Image
