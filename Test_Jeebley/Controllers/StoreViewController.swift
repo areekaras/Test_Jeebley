@@ -70,6 +70,9 @@ extension StoreViewController {
         self.startLoader()
         self.initialiseValues()
         
+        self.alertDelegate = self
+        self.currentVC = ViewControllers.STORE_VC.rawValue
+        
         getItemsInfo_API()
     }
     
@@ -86,17 +89,21 @@ extension StoreViewController {
         }
 //        print("tableVw content offset : \(storeTableView.contentOffset)")
         if storeTableView.contentOffset.y >= -5 {
+            self.isDefaultStatusBarStyle = true
             UIView.animate(withDuration: 0.3, animations: {
                 self.navigationVwTopConstraint.constant = 0
                 self.view.layoutIfNeeded()
             })
         }
         else {
+            self.isDefaultStatusBarStyle = false
             UIView.animate(withDuration: 0.3, animations: {
                 self.navigationVwTopConstraint.constant = -70
                 self.view.layoutIfNeeded()
             })
         }
+        
+        self.setNeedsStatusBarAppearanceUpdate()
         
     }
 }
@@ -209,7 +216,15 @@ extension StoreViewController:UITableViewDelegate,UITableViewDataSource {
         return cell
     }
     
-    
+}
+
+//MARK: - DelegateFunctions
+extension StoreViewController {
+    func alertViewDismissed() {
+        if currentVC == ViewControllers.STORE_VC.rawValue {
+            getItemsInfo_API()
+        }
+    }
 }
 
 //MARK: - Functionalities

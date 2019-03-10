@@ -33,13 +33,26 @@ extension SplashViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        // Animation of Logo and loader
         animateCompanyLogo()
         // API call to get store Info
         getStoreInfo_API()
+        
+        self.alertDelegate = self
+        self.currentVC = ViewControllers.SPLASH_VC.rawValue
     }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
+    }
+}
+
+//MARK: - DelegateFunctions
+extension SplashViewController {
+    func alertViewDismissed() {
+        if currentVC == ViewControllers.SPLASH_VC.rawValue {
+            getStoreInfo_API()
+        }
     }
 }
 

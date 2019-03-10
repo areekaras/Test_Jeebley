@@ -432,14 +432,14 @@
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
-                                    <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="q0s-Jz-XHi" secondAttribute="trailing" constant="15" id="8Mg-p1-zYk"/>
+                                    <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="q0s-Jz-XHi" secondAttribute="trailing" constant="10" id="8Mg-p1-zYk"/>
                                     <constraint firstAttribute="height" constant="70" id="EyH-8Y-E0f"/>
                                     <constraint firstItem="WOQ-Q9-XWu" firstAttribute="leading" secondItem="tNR-tM-Cqd" secondAttribute="leading" id="FGO-63-bgf"/>
                                     <constraint firstItem="q0s-Jz-XHi" firstAttribute="centerX" secondItem="tNR-tM-Cqd" secondAttribute="centerX" id="ILg-7Q-M9T"/>
                                     <constraint firstAttribute="bottom" secondItem="WOQ-Q9-XWu" secondAttribute="bottom" id="SMc-Np-cNl"/>
                                     <constraint firstAttribute="bottom" secondItem="q0s-Jz-XHi" secondAttribute="bottom" constant="10" id="Y1A-0m-duH"/>
                                     <constraint firstAttribute="trailing" secondItem="WOQ-Q9-XWu" secondAttribute="trailing" id="bWL-FI-4Nc"/>
-                                    <constraint firstItem="q0s-Jz-XHi" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="tNR-tM-Cqd" secondAttribute="leading" constant="15" id="yt7-2v-rZr"/>
+                                    <constraint firstItem="q0s-Jz-XHi" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="tNR-tM-Cqd" secondAttribute="leading" constant="10" id="yt7-2v-rZr"/>
                                 </constraints>
                             </view>
                         </subviews>
@@ -749,12 +749,12 @@
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
-                                    <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="d8i-Gi-FIH" secondAttribute="trailing" constant="15" id="9sE-dz-h6V"/>
+                                    <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="d8i-Gi-FIH" secondAttribute="trailing" constant="10" id="9sE-dz-h6V"/>
                                     <constraint firstItem="bJB-ku-UYp" firstAttribute="leading" secondItem="34G-mj-e50" secondAttribute="leading" id="D4h-hK-eil"/>
                                     <constraint firstItem="d8i-Gi-FIH" firstAttribute="centerX" secondItem="34G-mj-e50" secondAttribute="centerX" id="ULq-fe-UYi"/>
                                     <constraint firstAttribute="height" constant="70" id="VhG-x7-gf0"/>
                                     <constraint firstItem="6R1-6Z-BZw" firstAttribute="leading" secondItem="34G-mj-e50" secondAttribute="leading" constant="15" id="d2c-ub-DW9"/>
-                                    <constraint firstItem="d8i-Gi-FIH" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="34G-mj-e50" secondAttribute="leading" constant="15" id="gpd-oe-IOg"/>
+                                    <constraint firstItem="d8i-Gi-FIH" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="6R1-6Z-BZw" secondAttribute="trailing" constant="10" id="ioh-Qq-hlx"/>
                                     <constraint firstAttribute="trailing" secondItem="bJB-ku-UYp" secondAttribute="trailing" id="nkQ-rp-3Ge"/>
                                     <constraint firstAttribute="bottom" secondItem="bJB-ku-UYp" secondAttribute="bottom" id="nwa-dP-MMt"/>
                                     <constraint firstItem="6R1-6Z-BZw" firstAttribute="centerY" secondItem="d8i-Gi-FIH" secondAttribute="centerY" id="wBj-Bn-4wf"/>

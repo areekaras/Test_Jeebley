@@ -18,6 +18,19 @@ public enum AppDetails : String {
 }
 
 
+/// ViewController Class names for global access
+///
+/// - BASE_VC: BaseViewController
+/// - SPLASH_VC: SplashViewController
+/// - STORE_VC: StoreViewController
+/// - ITEM_VC: ItemViewController
+public enum ViewControllers : String{
+    case BASE_VC = "BaseViewController"
+    case SPLASH_VC = "SplashViewController"
+    case STORE_VC = "StoreViewController"
+    case ITEM_VC = "ItemViewController"
+}
+
 /// Entity Names for global access
 ///
 /// - STORE: Store Entity
