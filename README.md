@@ -7,4 +7,4 @@
 * Hero - for smooth transition between view controllers
 * SVProgressHUD - loader in application
 
-** Image urls in the api are not directing to proper link
+** Image urls in the api are not directing to proper link, Given a place holder image instead.
